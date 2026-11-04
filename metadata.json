@@ -1,0 +1,6 @@
+{
+  "name": "Radar de Clientes",
+  "description": "Plataforma de prospección local B2B con Google Places API (New), PageSpeed Insights v5 y Gemini Flash para encontrar negocios, auditar sus webs y preparar el primer contacto comercial.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
