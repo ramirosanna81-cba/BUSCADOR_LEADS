@@ -11,7 +11,9 @@ import {
 } from 'lucide-react';
 import {
   NicheCategoryMetrics,
+  NicheGroup,
   NicheRadarReport,
+  NICHE_GROUPS,
   SUGGESTED_NICHES,
   SellerProfile,
 } from '../types';
@@ -34,8 +36,21 @@ export const NicheRadarView: React.FC<NicheRadarViewProps> = ({
   onOpenNicheInSearch,
   onUsageUpdated,
 }) => {
-  const [zone, setZone] = useState(initialZone || 'Córdoba Capital');
-  const [categories, setCategories] = useState<string[]>([...SUGGESTED_NICHES]);
+  const [zone, setZone] = useState(initialZone || 'Córdoba Capital, Argentina');
+  const [categories, setCategories] = useState<string[]>([
+    'canchas de fútbol 5',
+    'canchas de fútbol 7',
+    'canchas de fútbol 11',
+    'carnicerías',
+    'verdulerías y fruterías',
+    'kioscos y drugstores',
+    'barberías',
+    'peluquerías',
+    'lomiterías',
+    'rotiserías y casas de comidas',
+    'talleres mecánicos',
+    'veterinarias',
+  ]);
   const [newCategoryInput, setNewCategoryInput] = useState('');
 
   // Estado de pre-confirmación de llamadas a Places
@@ -77,6 +92,20 @@ export const NicheRadarView: React.FC<NicheRadarViewProps> = ({
 
   const handleRemoveCategory = (cat: string) => {
     setCategories((prev) => prev.filter((c) => c !== cat));
+  };
+
+  const handleAddGroupCategories = (group: NicheGroup) => {
+    setCategories((prev) => {
+      const existing = new Set(prev.map((c) => c.toLowerCase()));
+      const next = [...prev];
+      for (const item of group.items) {
+        if (!existing.has(item.toLowerCase())) {
+          next.push(item);
+          existing.add(item.toLowerCase());
+        }
+      }
+      return next;
+    });
   };
 
   const handleRestoreDefaultCategories = () => {
@@ -242,7 +271,7 @@ export const NicheRadarView: React.FC<NicheRadarViewProps> = ({
                   type="text"
                   value={zone}
                   onChange={(e) => setZone(e.target.value)}
-                  placeholder="Ej. Córdoba Capital / Nueva Córdoba / Centro / 14001"
+                  placeholder="Ej. Córdoba Capital, Argentina / Nueva Córdoba / Cerro de las Rosas / Centro"
                   className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-100 focus:outline-none transition-all"
                   required
                 />
@@ -271,15 +300,42 @@ export const NicheRadarView: React.FC<NicheRadarViewProps> = ({
           </div>
         </form>
 
-        {/* Lista editable de categorías */}
+        {/* Lista editable de categorías y atajos por grupo */}
         <div className="pt-2 space-y-3">
+          {/* Botones para agregar grupos completos de rubros */}
+          <div className="space-y-1.5 pb-1 border-b border-slate-100">
+            <span className="text-[11px] font-semibold text-slate-500 block">
+              Sumar grupos completos de nichos a este barrido:
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {NICHE_GROUPS.map((g) => (
+                <button
+                  key={g.groupName}
+                  type="button"
+                  onClick={() => handleAddGroupCategories(g)}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded transition-all cursor-pointer"
+                >
+                  <Plus className="w-3 h-3 text-emerald-600" />
+                  <span>{g.groupName}</span>
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={handleRestoreDefaultCategories}
+                className="px-2.5 py-1 text-[11px] font-semibold bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 rounded transition-all cursor-pointer"
+              >
+                Cargar todos los sugeridos
+              </button>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-700">
               Categorías incluidas en el barrido ({categories.length}):
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
             {categories.map((cat) => (
               <div
                 key={cat}
@@ -306,7 +362,7 @@ export const NicheRadarView: React.FC<NicheRadarViewProps> = ({
               type="text"
               value={newCategoryInput}
               onChange={(e) => setNewCategoryInput(e.target.value)}
-              placeholder="Añadir otra categoría (ej. abogados, fontaneros...)"
+              placeholder="Añadir otra categoría (ej. canchas de pádel, lavaderos, lomiterías...)"
               className="flex-1 px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded text-slate-900 focus:bg-white focus:border-blue-600 focus:outline-none"
             />
             <button

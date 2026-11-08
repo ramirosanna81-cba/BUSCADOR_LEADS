@@ -575,8 +575,8 @@ ${directHtmlReport}
 
 MI PERFIL DE VENDEDOR:
 - Mi nombre: ${sellerProfile?.name && sellerProfile.name !== 'Carlos Mendoza' ? sellerProfile.name : 'Ramiro Sanna'}
-- Qué vendo: ${sellerProfile?.servicesOffered || 'Páginas web adaptadas a celulares, agentes de IA para WhatsApp y sistemas para sacar turnos online'}
-- Mi propuesta de valor: ${sellerProfile?.valueProposition || 'Ayudo a negocios locales en Córdoba y Argentina a captar más clientes y automatizar consultas.'}
+- Qué vendo: ${sellerProfile?.servicesOffered || 'Páginas web adaptadas a celulares, sistemas de turnos con seña online para canchas de fútbol, turnos automáticos y catálogos de pedidos rápidos por WhatsApp para comercios'}
+- Mi propuesta de valor: ${sellerProfile?.valueProposition || 'Ayudo a negocios locales en Córdoba y Argentina a captar más clientes, asegurar turnos con seña y automatizar pedidos por WhatsApp sin costos ocultos.'}
 - Tono solicitado para los borradores: ${tone || 'Cercano y directo'}
 
 REGLAS ESTRICTAS DE REDACCIÓN EN ESPAÑOL DE ARGENTINA (VOSEO COMERCIAL SOBRIO):
@@ -584,7 +584,11 @@ REGLAS ESTRICTAS DE REDACCIÓN EN ESPAÑOL DE ARGENTINA (VOSEO COMERCIAL SOBRIO)
 2. Identidad del vendedor: Tu nombre es "${sellerProfile?.name && sellerProfile.name !== 'Carlos Mendoza' ? sellerProfile.name : 'Ramiro Sanna'}". Cuando te presentes en el guion de llamada, WhatsApp o correo, presentate siempre como "${sellerProfile?.name && sellerProfile.name !== 'Carlos Mendoza' ? sellerProfile.name : 'Ramiro Sanna'}" (NUNCA uses "Carlos Mendoza" ni nombres ficticios).
 3. Vocabulario de negocio: Usá "celu" o "teléfono", "página web", "llamada corta", "sacar turno", "clientes de la zona".
 4. Cierre / Llamado a la acción (CTA): Cerrá SIEMPRE con una pregunta al grano para responder con un SÍ o un NO por WhatsApp (ejemplos: "¿Te sirve que te mande un ejemplo rápido por acá?", "¿Te gustaría que lo veamos en 5 minutos?", "¿Te interesa ver cómo quedaría?").
-5. Adaptación al tono elegido:
+5. Enfoque según rubro de negocio:
+   - Canchas de fútbol (fútbol 5, 7, 9, 11) o complejos deportivos: Enfocate en "Turnos con seña online" por WhatsApp para que los grupos dejen la seña y nunca claven un turno de palabra.
+   - Comercios de cercanía y alimentos (carnicerías, verdulerías, kioscos, supermercados, rotiserías): Enfocate en "Catálogo digital y pedidos rápidos por WhatsApp" para ordenar pedidos y evitar horas de responder mensajes sueltos.
+   - Servicios con agenda (barberías, peluquerías, centros de estética, consultorios, veterinarias, talleres): Enfocate en "Sistema de turnos online y Agente de IA para WhatsApp 24/7".
+6. Adaptación al tono elegido:
    - "Cercano y directo": Voseo empático y concreto, directo a la solución que le ahorra tiempo y le trae clientes.
    - "Consultivo profesional": Voseo sobrio y formal, enfocado en rentabilidad, orden comercial y presencia de marca.
    - "Enfocado en pérdida de clientes": Voseo que hace foco en consultas que se pierden fuera de hora o clientes que eligen a la competencia por no poder sacar turno o consultar directo por WhatsApp.
@@ -663,7 +667,7 @@ Generá el análisis estructurado y los 3 borradores personalizados de primer co
                   service: {
                     type: Type.STRING,
                     description:
-                      'Uno de: "Página web nueva", "Agente de IA por WhatsApp", "Sistema de turnos online" o "Pack Web + WhatsApp IA".',
+                      'Uno de: "Página web nueva", "Agente de IA por WhatsApp", "Sistema de turnos online", "Turnos con seña online", "Catálogo y pedidos por WhatsApp" o "Pack Web + WhatsApp IA".',
                   },
                   why: {
                     type: Type.STRING,
@@ -795,8 +799,8 @@ ${
 
 MI PERFIL DE VENDEDOR:
 - Nombre: ${sellerProfile?.name && sellerProfile.name !== 'Carlos Mendoza' ? sellerProfile.name : 'Ramiro Sanna'}
-- Qué vendo: ${sellerProfile?.servicesOffered || 'Páginas web adaptadas a celulares, agentes de IA para WhatsApp y sistemas para sacar turnos online'}
-- Mi propuesta: ${sellerProfile?.valueProposition || 'Ayudo a negocios locales en Córdoba y Argentina a captar más clientes y automatizar consultas.'}
+- Qué vendo: ${sellerProfile?.servicesOffered || 'Páginas web adaptadas a celulares, sistemas de turnos con seña online para canchas de fútbol, turnos automáticos y catálogos de pedidos rápidos por WhatsApp para comercios'}
+- Mi propuesta: ${sellerProfile?.valueProposition || 'Ayudo a negocios locales en Córdoba y Argentina a captar más clientes, asegurar turnos con seña y automatizar pedidos por WhatsApp sin costos ocultos.'}
 - Tono elegido: ${tone || 'Cercano y directo'}
 
 REGLAS ESTRICTAS DE REDACCIÓN EN ESPAÑOL DE ARGENTINA (VOSEO COMERCIAL SOBRIO):
@@ -804,7 +808,11 @@ REGLAS ESTRICTAS DE REDACCIÓN EN ESPAÑOL DE ARGENTINA (VOSEO COMERCIAL SOBRIO)
 2. Identidad del vendedor: Tu nombre es "${sellerProfile?.name && sellerProfile.name !== 'Carlos Mendoza' ? sellerProfile.name : 'Ramiro Sanna'}". Cuando te presentes en el mensaje de WhatsApp, guion de llamada o correo electrónico, presentate SIEMPRE como "${sellerProfile?.name && sellerProfile.name !== 'Carlos Mendoza' ? sellerProfile.name : 'Ramiro Sanna'}" (NUNCA uses "Carlos Mendoza" ni nombres ficticios).
 3. Vocabulario de negocio: Usá "celu" o "teléfono", "página web", "llamada corta", "sacar turno", "clientes de la zona".
 4. Cierre / Llamado a la acción (CTA): Cerrá SIEMPRE con una pregunta al grano para responder con un SÍ o un NO por WhatsApp (ejemplos: "¿Te sirve que te mande un ejemplo rápido por acá?", "¿Te gustaría que te muestre cómo quedaría?", "¿Te interesa que lo veamos en 5 minutos?").
-5. Adaptación al tono elegido:
+5. Enfoque según rubro de negocio:
+   - Canchas de fútbol (fútbol 5, 7, 9, 11) o complejos deportivos: Enfocate en "Turnos con seña online" por WhatsApp para que los grupos dejen la seña y nunca claven un turno de palabra.
+   - Comercios de cercanía y alimentos (carnicerías, verdulerías, kioscos, supermercados, rotiserías): Enfocate en "Catálogo digital y pedidos rápidos por WhatsApp" para ordenar pedidos y evitar horas de responder mensajes sueltos.
+   - Servicios con agenda (barberías, peluquerías, centros de estética, consultorios, veterinarias, talleres): Enfocate en "Sistema de turnos online y Agente de IA para WhatsApp 24/7".
+6. Adaptación al tono elegido:
    - "Cercano y directo": Voseo empático y concreto, directo a la solución que le ahorra tiempo y le trae clientes.
    - "Consultivo profesional": Voseo sobrio y formal, enfocado en rentabilidad, orden comercial y presencia de marca.
    - "Enfocado en pérdida de clientes": Voseo que hace foco en consultas que se pierden fuera de hora o clientes que eligen a la competencia por no poder sacar turno o consultar directo por WhatsApp.
@@ -838,7 +846,7 @@ Generá los tres borradores personalizados de primer contacto (guion de llamada 
                   service: {
                     type: Type.STRING,
                     description:
-                      'Uno de: "Página web nueva", "Agente de IA por WhatsApp", "Sistema de turnos online" o "Pack Web + WhatsApp IA".',
+                      'Uno de: "Página web nueva", "Agente de IA por WhatsApp", "Sistema de turnos online", "Turnos con seña online", "Catálogo y pedidos por WhatsApp" o "Pack Web + WhatsApp IA".',
                   },
                   why: { type: Type.STRING },
                 },

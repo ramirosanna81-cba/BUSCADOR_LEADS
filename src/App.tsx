@@ -41,9 +41,9 @@ export default function App() {
   const [hasServerCloudKey, setHasServerCloudKey] = useState(false);
   const [serverMapsKey, setServerMapsKey] = useState('');
 
-  // Estado de búsqueda actual (por defecto Córdoba Capital)
-  const [zone, setZone] = useState('Córdoba Capital');
-  const [niche, setNiche] = useState('talleres mecánicos');
+  // Estado de búsqueda actual (por defecto Córdoba Capital, Argentina)
+  const [zone, setZone] = useState('Córdoba Capital, Argentina');
+  const [niche, setNiche] = useState('canchas de fútbol 5');
   const [searchResults, setSearchResults] = useState<BusinessLead[]>([]);
   const [nextPageToken, setNextPageToken] = useState<string | undefined>(
     undefined
@@ -330,7 +330,7 @@ export default function App() {
               </div>
               <div className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Córdoba Capital</span>
+                <span>Córdoba Capital, Argentina</span>
               </div>
             </div>
           </div>

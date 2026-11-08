@@ -20,6 +20,7 @@ import {
 import {
   AnalysisQueueStatus,
   BusinessLead,
+  NICHE_GROUPS,
   SUGGESTED_NICHES,
 } from '../types';
 import { ScoreBadge } from './ScoreBadge';
@@ -69,6 +70,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
   const [viewMode, setViewMode] = useState<'table' | 'cards' | 'map'>('table');
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [savingBatch, setSavingBatch] = useState(false);
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState<string>('all');
 
   // Filtros en cliente
   const [onlyWithoutOwnWeb, setOnlyWithoutOwnWeb] = useState(false);
@@ -226,7 +228,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
                 type="text"
                 value={zone}
                 onChange={(e) => onZoneChange(e.target.value)}
-                placeholder="Ej. Córdoba Capital / Centro / Nueva Córdoba / 14001"
+                placeholder="Ej. Córdoba Capital, Argentina / Nueva Córdoba / Cerro de las Rosas / Centro"
                 className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
                 required
               />
@@ -247,7 +249,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
                 type="text"
                 value={niche}
                 onChange={(e) => onNicheChange(e.target.value)}
-                placeholder="Ej. talleres mecánicos, clínicas dentales, reformas..."
+                placeholder="Ej. canchas de fútbol 5, carnicerías, barberías, lomiterías..."
                 className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
                 required
               />
@@ -275,14 +277,50 @@ export const SearchView: React.FC<SearchViewProps> = ({
           </div>
         </form>
 
-        {/* Sugerencias rápidas de nichos */}
-        <div className="mt-4 pt-3.5 border-t border-slate-100">
-          <div className="text-xs font-semibold text-slate-600 mb-2 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>Sugerencias de nicho populares (pulsa para rellenar):</span>
+        {/* Sugerencias de nichos agrupadas por rubro */}
+        <div className="mt-4 pt-3.5 border-t border-slate-100 space-y-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Nichos sugeridos para Córdoba Capital (elegí para autocompletar):</span>
+            </div>
+
+            {/* Pestañas de categorías de rubros */}
+            <div className="flex flex-wrap gap-1">
+              <button
+                type="button"
+                onClick={() => setSelectedCategoryTab('all')}
+                className={`px-2 py-0.5 text-[11px] font-semibold rounded transition-all cursor-pointer ${
+                  selectedCategoryTab === 'all'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Todos
+              </button>
+              {NICHE_GROUPS.map((group) => (
+                <button
+                  key={group.groupName}
+                  type="button"
+                  onClick={() => setSelectedCategoryTab(group.groupName)}
+                  className={`px-2 py-0.5 text-[11px] font-semibold rounded transition-all cursor-pointer ${
+                    selectedCategoryTab === group.groupName
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {group.groupName}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {SUGGESTED_NICHES.map((sug) => {
+
+          {/* Chips de nichos según categoría seleccionada */}
+          <div className="flex flex-wrap gap-1.5 pt-1 max-h-36 overflow-y-auto pr-1">
+            {(selectedCategoryTab === 'all'
+              ? SUGGESTED_NICHES
+              : NICHE_GROUPS.find((g) => g.groupName === selectedCategoryTab)?.items || []
+            ).map((sug) => {
               const active = niche.trim().toLowerCase() === sug.toLowerCase();
               return (
                 <button
@@ -291,7 +329,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
                   onClick={() => onNicheChange(sug)}
                   className={`px-2.5 py-1 text-xs rounded-md border transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                     active
-                      ? 'bg-blue-600 text-white border-blue-600 font-semibold shadow-xs'
+                      ? 'bg-blue-600 text-white border-blue-600 font-semibold shadow-xs ring-1 ring-blue-300'
                       : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200'
                   }`}
                 >

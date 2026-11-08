@@ -18,9 +18,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
   sellerProfile: {
     name: 'Ramiro Sanna',
     servicesOffered:
-      'Diseño de páginas web rápidas adaptadas a celulares, agentes de IA para WhatsApp que responden 24/7 y sistemas automáticos para sacar turnos online.',
+      'Páginas web adaptadas a celulares, sistemas de turnos con seña online para canchas de fútbol, turnos automáticos para estética/salud, y catálogos de pedidos rápidos por WhatsApp para comercios.',
     valueProposition:
-      'Ayudo a negocios locales en Córdoba y Argentina a captar más clientes y automatizar la atención por WhatsApp en menos de 14 días, sin costos ocultos.',
+      'Ayudo a negocios locales en Córdoba y Argentina a captar más clientes, asegurar turnos con seña y automatizar pedidos por WhatsApp sin costos ocultos.',
     defaultTone: 'Cercano y directo',
   },
   monthlyPlacesLimit: 1000,
