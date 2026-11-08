@@ -159,9 +159,9 @@ export function calculateOpportunityScore(
         }
         if (!c.onlineBooking) {
           breakdown.push({
-            label: 'Sin sistema de citas o reservas online',
+            label: 'Sin sistema para sacar turnos o reservas online',
             points: 12,
-            reason: 'El cliente no puede reservar cita ni disponibilidad desde la web.',
+            reason: 'El cliente no puede sacar turno ni ver disponibilidad desde la web.',
           });
         }
         if (!c.mobileFriendly || !c.https || c.outdatedSignals) {

@@ -16,11 +16,11 @@ const STORE_SETTINGS = 'settings';
 export const DEFAULT_SETTINGS: AppSettings = {
   googleCloudApiKey: '',
   sellerProfile: {
-    name: 'Carlos Mendoza',
+    name: 'Ramiro Sanna',
     servicesOffered:
-      'Diseño de páginas web rápidas orientadas a conversión, agentes de IA por WhatsApp que atienden 24/7 y sistemas automatizados de reserva de citas online.',
+      'Diseño de páginas web rápidas adaptadas a celulares, agentes de IA para WhatsApp que responden 24/7 y sistemas automáticos para sacar turnos online.',
     valueProposition:
-      'Ayudo a negocios locales en España a captar más clientes desde Google Maps y automatizar la atención por WhatsApp en menos de 14 días, sin cuotas ocultas.',
+      'Ayudo a negocios locales en Córdoba y Argentina a captar más clientes y automatizar la atención por WhatsApp en menos de 14 días, sin costos ocultos.',
     defaultTone: 'Cercano y directo',
   },
   monthlyPlacesLimit: 1000,
@@ -113,13 +113,29 @@ class IndexedDBRepository implements DataRepository {
       const req = store.get('app_settings');
       req.onsuccess = () => {
         if (req.result && req.result.value) {
+          const loadedProfile = {
+            ...DEFAULT_SETTINGS.sellerProfile,
+            ...(req.result.value.sellerProfile || {}),
+          };
+          if (!loadedProfile.name || loadedProfile.name === 'Carlos Mendoza') {
+            loadedProfile.name = 'Ramiro Sanna';
+          }
+          if (loadedProfile.valueProposition?.includes('España')) {
+            loadedProfile.valueProposition = loadedProfile.valueProposition.replace(
+              /en España/g,
+              'en Córdoba y Argentina'
+            );
+          }
+          if (loadedProfile.servicesOffered?.includes('reserva de citas')) {
+            loadedProfile.servicesOffered = loadedProfile.servicesOffered.replace(
+              /reserva de citas online/g,
+              'sistemas para sacar turnos online'
+            );
+          }
           resolve({
             ...DEFAULT_SETTINGS,
             ...req.result.value,
-            sellerProfile: {
-              ...DEFAULT_SETTINGS.sellerProfile,
-              ...(req.result.value.sellerProfile || {}),
-            },
+            sellerProfile: loadedProfile,
             placesUsageByMonth: {
               ...(req.result.value.placesUsageByMonth || {}),
             },

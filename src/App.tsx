@@ -41,8 +41,8 @@ export default function App() {
   const [hasServerCloudKey, setHasServerCloudKey] = useState(false);
   const [serverMapsKey, setServerMapsKey] = useState('');
 
-  // Estado de búsqueda actual
-  const [zone, setZone] = useState('Dos Hermanas, Sevilla');
+  // Estado de búsqueda actual (por defecto Córdoba Capital)
+  const [zone, setZone] = useState('Córdoba Capital');
   const [niche, setNiche] = useState('talleres mecánicos');
   const [searchResults, setSearchResults] = useState<BusinessLead[]>([]);
   const [nextPageToken, setNextPageToken] = useState<string | undefined>(
@@ -91,9 +91,9 @@ export default function App() {
       setHasServerCloudKey(st.hasServerCloudKey);
       setServerMapsKey(st.mapsJsApiKey);
     });
-    // Si ya hay caché para la búsqueda inicial, cargarla sin gastar llamadas
+    // Si ya hay caché para la búsqueda inicial en Córdoba Capital, cargarla sin gastar llamadas
     dbRepository
-      .getSearchCache('Dos Hermanas, Sevilla', 'talleres mecánicos')
+      .getSearchCache('Córdoba Capital', 'talleres mecánicos')
       .then((cached) => {
         if (cached && cached.places.length > 0) {
           setSearchResults(cached.places);
@@ -281,22 +281,24 @@ export default function App() {
     id: ScreenId;
     label: string;
     icon: React.ComponentType<{ className?: string }>;
+    iconColor: string;
     count?: number;
   }> = [
-    { id: 'search', label: 'Buscar', icon: Search },
-    { id: 'detail', label: 'Ficha del negocio', icon: Building2 },
-    { id: 'radar', label: 'Radar de nichos', icon: Compass },
+    { id: 'search', label: 'Buscar', icon: Search, iconColor: 'text-sky-400' },
+    { id: 'detail', label: 'Ficha del negocio', icon: Building2, iconColor: 'text-amber-400' },
+    { id: 'radar', label: 'Radar de nichos', icon: Compass, iconColor: 'text-emerald-400' },
     {
       id: 'leads',
       label: 'Mis leads',
       icon: Briefcase,
+      iconColor: 'text-rose-400',
       count: savedLeads.length,
     },
-    { id: 'settings', label: 'Ajustes', icon: SettingsIcon },
+    { id: 'settings', label: 'Ajustes', icon: SettingsIcon, iconColor: 'text-purple-400' },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    <div className="min-h-screen flex flex-col bg-slate-100/90 text-slate-900">
       {/* Aviso superior de cuota de Google Maps Platform */}
       {quotaExceeded && (
         <div className="bg-amber-50 border-b border-amber-200 text-amber-900 px-4 py-2.5 text-xs md:text-sm text-center sticky top-0 z-50 shadow-sm no-print">
@@ -316,18 +318,24 @@ export default function App() {
       )}
 
       <div className="flex-1 flex flex-col lg:flex-row">
-        {/* Menú Lateral Fijo (Escritorio) */}
-        <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r border-slate-200 no-print">
-          <div className="px-5 py-5 border-b border-slate-200">
-            <div className="text-lg font-bold tracking-tight text-slate-900 font-display">
-              Radar de Clientes
+        {/* Menú Lateral Fijo (Escritorio) con diseño moderno y profundo */}
+        <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-[#0b1329] text-slate-300 border-r border-slate-800/80 shadow-lg no-print">
+          <div className="px-5 py-5 border-b border-slate-800/80 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-blue-500/25 shrink-0">
+              <Compass className="w-5 h-5 text-white" />
             </div>
-            <div className="text-xs text-slate-500 mt-0.5">
-              Prospección de servicios digitales
+            <div>
+              <div className="text-base font-bold tracking-tight text-white font-display flex items-center gap-1.5">
+                <span>Radar de Clientes</span>
+              </div>
+              <div className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Córdoba Capital</span>
+              </div>
             </div>
           </div>
 
-          <nav className="flex-1 px-3 py-4 space-y-1">
+          <nav className="flex-1 px-3 py-4 space-y-1.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeScreen === item.id;
@@ -336,20 +344,22 @@ export default function App() {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveScreen(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-slate-900 text-white'
-                      : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30 ring-1 ring-white/20'
+                      : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4 shrink-0" />
+                  <div className="flex items-center gap-3">
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : item.iconColor}`} />
                     <span>{item.label}</span>
                   </div>
                   {typeof item.count === 'number' && (
                     <span
-                      className={`font-mono tabular-nums text-xs ${
-                        isActive ? 'text-slate-300' : 'text-slate-500'
+                      className={`font-mono tabular-nums text-xs px-2 py-0.5 rounded-full ${
+                        isActive
+                          ? 'bg-white/20 text-white font-bold'
+                          : 'bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold'
                       }`}
                     >
                       {item.count}
@@ -361,27 +371,28 @@ export default function App() {
           </nav>
 
           {/* Resumen mensual de llamadas a Places en barra lateral */}
-          <div className="p-4 border-t border-slate-200 bg-slate-50 space-y-2">
+          <div className="p-4 border-t border-slate-800/80 bg-slate-900/60 m-3 rounded-xl border border-slate-800 space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-medium text-slate-600">
-                Places API ({currentMonthKey})
+              <span className="font-medium text-slate-300 flex items-center gap-1">
+                <span>Places API</span>
+                <span className="text-[10px] text-slate-400 font-mono">({currentMonthKey})</span>
               </span>
               <span
                 className={`font-mono tabular-nums font-bold ${
-                  isNearQuotaLimit ? 'text-amber-700' : 'text-slate-900'
+                  isNearQuotaLimit ? 'text-amber-400' : 'text-emerald-400'
                 }`}
               >
                 {currentMonthCalls} / {monthlyLimit}
               </span>
             </div>
-            <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden p-0.5 border border-slate-700/60">
               <div
-                className={`h-full ${
+                className={`h-full rounded-full transition-all ${
                   currentMonthCalls >= monthlyLimit
-                    ? 'bg-red-600'
+                    ? 'bg-red-500'
                     : isNearQuotaLimit
-                    ? 'bg-amber-500'
-                    : 'bg-blue-700'
+                    ? 'bg-amber-400'
+                    : 'bg-gradient-to-r from-emerald-400 to-blue-500'
                 }`}
                 style={{
                   width: `${Math.min(
@@ -392,10 +403,10 @@ export default function App() {
               />
             </div>
             {isNearQuotaLimit && (
-              <div className="flex items-start gap-1.5 text-[11px] text-amber-800 pt-1">
-                <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600" />
+              <div className="flex items-start gap-1.5 text-[11px] text-amber-300 pt-1">
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-400" />
                 <span>
-                  Has superado las {warningThreshold} llamadas mensuales.
+                  Has superado las {warningThreshold} llamadas del mes.
                 </span>
               </div>
             )}
@@ -403,14 +414,19 @@ export default function App() {
         </aside>
 
         {/* Cabecera Móvil */}
-        <header className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between no-print">
-          <div className="text-base font-bold text-slate-900 font-display">
-            Radar de Clientes
+        <header className="lg:hidden bg-[#0b1329] text-white border-b border-slate-800 px-4 py-3 flex items-center justify-between no-print">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-600 to-emerald-400 flex items-center justify-center text-white">
+              <Compass className="w-4 h-4" />
+            </div>
+            <div className="text-sm font-bold tracking-tight text-white font-display">
+              Radar de Clientes
+            </div>
           </div>
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="p-1.5 text-slate-700 hover:bg-slate-100 rounded"
+            className="p-1.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg"
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5" />
@@ -421,7 +437,7 @@ export default function App() {
         </header>
 
         {mobileMenuOpen && (
-          <nav className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 space-y-1 no-print">
+          <nav className="lg:hidden bg-[#0b1329] border-b border-slate-800 px-4 py-3 space-y-1.5 no-print">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeScreen === item.id;
@@ -433,18 +449,20 @@ export default function App() {
                     setActiveScreen(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded text-xs font-semibold ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-semibold ${
                     isActive
-                      ? 'bg-slate-900 text-white'
-                      : 'text-slate-700 hover:bg-slate-100'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-300 hover:bg-slate-800'
                   }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <Icon className="w-4 h-4" />
+                  <div className="flex items-center gap-2.5">
+                    <Icon className={`w-4 h-4 ${item.iconColor}`} />
                     <span>{item.label}</span>
                   </div>
                   {typeof item.count === 'number' && (
-                    <span className="font-mono tabular-nums">{item.count}</span>
+                    <span className="font-mono tabular-nums text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
+                      {item.count}
+                    </span>
                   )}
                 </button>
               );
@@ -455,17 +473,20 @@ export default function App() {
         {/* Área de Contenido Principal */}
         <main className="flex-1 lg:pl-64">
           {/* Barra superior contextual */}
-          <div className="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between gap-4 no-print">
-            <div className="text-xs font-medium text-slate-600">
-              <span className="text-slate-400">Radar de Clientes</span>
-              <span className="mx-2 text-slate-300">/</span>
-              <span className="font-semibold text-slate-900">
+          <div className="bg-white border-b border-slate-200/90 shadow-2xs px-6 py-3.5 flex items-center justify-between gap-4 no-print">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-medium text-slate-500">Radar</span>
+              <span className="text-slate-300">/</span>
+              <span className="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded text-xs">
                 {navItems.find((n) => n.id === activeScreen)?.label}
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200 ml-1">
+                📍 {zone}
               </span>
               {activeScreen === 'detail' && selectedLead && (
                 <>
-                  <span className="mx-2 text-slate-300">/</span>
-                  <span className="text-slate-700">
+                  <span className="text-slate-300">/</span>
+                  <span className="text-slate-700 font-medium truncate max-w-xs">
                     {selectedLead.displayName}
                   </span>
                 </>
@@ -476,9 +497,10 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setActiveScreen('leads')}
-                className="px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
               >
-                Mis leads ({savedLeads.length})
+                <Briefcase className="w-3.5 h-3.5 text-rose-500" />
+                <span>Mis leads ({savedLeads.length})</span>
               </button>
             </div>
           </div>

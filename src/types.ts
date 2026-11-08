@@ -34,19 +34,19 @@ export const TONE_OPTIONS: ToneOption[] = [
 
 export const SUGGESTED_NICHES: string[] = [
   'talleres mecánicos',
-  'clínicas dentales',
-  'fisioterapeutas',
-  'peluquerías',
+  'consultorios y clínicas dentales',
+  'kinesiólogos y fisioterapia',
+  'peluquerías y barberías',
   'centros de estética',
-  'restaurantes',
+  'restaurantes y bares',
   'gimnasios',
-  'academias',
+  'institutos y academias',
   'inmobiliarias',
-  'reformas',
-  'veterinarios',
-  'autoescuelas',
+  'refacciones y albañilería',
+  'veterinarias',
+  'academias de conducir',
   'ópticas',
-  'gestorías',
+  'estudios contables y gestorías',
 ];
 
 export interface ScoreBreakdownItem {
@@ -93,7 +93,12 @@ export interface GeminiWebAnalysis {
   socialLinks: string[];
   plainLanguageIssues: string[]; // 3 to 5 issues in plain Spanish
   recommendedService: {
-    service: 'Página web nueva' | 'Agente de IA por WhatsApp' | 'Sistema de citas online' | 'Pack Web + WhatsApp IA';
+    service:
+      | 'Página web nueva'
+      | 'Agente de IA por WhatsApp'
+      | 'Sistema de turnos online'
+      | 'Sistema de citas online'
+      | 'Pack Web + WhatsApp IA';
     why: string;
   };
 }

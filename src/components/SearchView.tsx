@@ -158,15 +158,15 @@ export const SearchView: React.FC<SearchViewProps> = ({
   const renderWebColumn = (lead: BusinessLead) => {
     if (lead.webClassification === 'no_website') {
       return (
-        <span className="text-xs font-semibold text-red-700">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
           Sin web
         </span>
       );
     }
     if (lead.webClassification === 'social_or_directory') {
       return (
-        <div className="flex flex-col">
-          <span className="text-xs font-semibold text-amber-800">
+        <div className="flex flex-col gap-0.5">
+          <span className="inline-flex items-center w-fit px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
             Sin web propia
           </span>
           {lead.websiteUri && (
@@ -175,7 +175,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-blue-700 hover:underline mt-0.5 truncate max-w-[160px]"
+              className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 hover:text-amber-900 hover:underline truncate max-w-[160px]"
             >
               <span>{lead.detectedPlatform || 'Perfil externo'}</span>
               <ExternalLink className="w-3 h-3 shrink-0" />
@@ -191,9 +191,9 @@ export const SearchView: React.FC<SearchViewProps> = ({
         target="_blank"
         rel="noopener noreferrer"
         onClick={(e) => e.stopPropagation()}
-        className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 hover:text-blue-900 hover:underline truncate max-w-[180px]"
+        className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:text-emerald-900 hover:underline truncate max-w-[180px]"
       >
-        <Globe className="w-3.5 h-3.5 shrink-0" />
+        <Globe className="w-3.5 h-3.5 shrink-0 text-emerald-600" />
         <span className="truncate">
           {lead.websiteUri?.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
         </span>
@@ -204,7 +204,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Cabecera de Búsqueda */}
-      <div className="bg-white border border-slate-200 rounded-lg p-5">
+      <div className="bg-white border-t-4 border-t-blue-600 border-x border-b border-slate-200/90 rounded-xl p-5 shadow-sm">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -215,19 +215,19 @@ export const SearchView: React.FC<SearchViewProps> = ({
           <div className="lg:col-span-5">
             <label
               htmlFor="input-zone"
-              className="block text-xs font-semibold text-slate-700 mb-1.5"
+              className="block text-xs font-bold text-slate-800 mb-1.5"
             >
               Zona (ciudad, barrio o código postal)
             </label>
             <div className="relative">
-              <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <MapPin className="w-4 h-4 text-blue-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 id="input-zone"
                 type="text"
                 value={zone}
                 onChange={(e) => onZoneChange(e.target.value)}
-                placeholder="Ej. Dos Hermanas, Sevilla / Chamberí, Madrid / 41701"
-                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none"
+                placeholder="Ej. Córdoba Capital / Centro / Nueva Córdoba / 14001"
+                className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
                 required
               />
             </div>
@@ -236,19 +236,19 @@ export const SearchView: React.FC<SearchViewProps> = ({
           <div className="lg:col-span-5">
             <label
               htmlFor="input-niche"
-              className="block text-xs font-semibold text-slate-700 mb-1.5"
+              className="block text-xs font-bold text-slate-800 mb-1.5"
             >
               Nicho o actividad del negocio
             </label>
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-blue-600 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 id="input-niche"
                 type="text"
                 value={niche}
                 onChange={(e) => onNicheChange(e.target.value)}
                 placeholder="Ej. talleres mecánicos, clínicas dentales, reformas..."
-                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-md text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:outline-none"
+                className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:outline-none transition-all"
                 required
               />
             </div>
@@ -258,7 +258,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
             <button
               type="submit"
               disabled={isLoading || !zone.trim() || !niche.trim()}
-              className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 text-white text-sm font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-300 disabled:to-slate-300 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow transition-all whitespace-nowrap shrink-0 cursor-pointer"
             >
               {isLoading ? (
                 <>
@@ -276,9 +276,10 @@ export const SearchView: React.FC<SearchViewProps> = ({
         </form>
 
         {/* Sugerencias rápidas de nichos */}
-        <div className="mt-4 pt-3 border-t border-slate-100">
-          <div className="text-xs text-slate-500 mb-2">
-            Sugerencias de nicho (pulsa para rellenar):
+        <div className="mt-4 pt-3.5 border-t border-slate-100">
+          <div className="text-xs font-semibold text-slate-600 mb-2 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span>Sugerencias de nicho populares (pulsa para rellenar):</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
             {SUGGESTED_NICHES.map((sug) => {
@@ -288,10 +289,10 @@ export const SearchView: React.FC<SearchViewProps> = ({
                   key={sug}
                   type="button"
                   onClick={() => onNicheChange(sug)}
-                  className={`px-2.5 py-1 text-xs rounded border transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                  className={`px-2.5 py-1 text-xs rounded-md border transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                     active
-                      ? 'bg-slate-900 text-white border-slate-900 font-medium'
-                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+                      ? 'bg-blue-600 text-white border-blue-600 font-semibold shadow-xs'
+                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200'
                   }`}
                 >
                   {sug}
@@ -528,15 +529,18 @@ export const SearchView: React.FC<SearchViewProps> = ({
 
       {/* Estado vacío */}
       {!isLoading && filteredLeads.length === 0 && (
-        <div className="bg-white border border-slate-200 rounded-lg p-12 text-center">
-          <h3 className="text-base font-semibold text-slate-900">
+        <div className="bg-white border border-slate-200/90 rounded-xl p-12 text-center shadow-xs">
+          <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Search className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-slate-900">
             {leads.length === 0
-              ? 'Busca negocios por zona y nicho para empezar'
+              ? 'Busca negocios en Córdoba Capital o tu zona para empezar'
               : 'Ningún negocio coincide con los filtros activos'}
           </h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+          <p className="text-xs text-slate-500 mt-1.5 max-w-md mx-auto leading-relaxed">
             {leads.length === 0
-              ? 'Escribe una localidad o código postal (por ejemplo, «Dos Hermanas, Sevilla») y elige un nicho para descubrir clientes potenciales y auditar sus páginas web.'
+              ? 'Escribe una localidad o código postal (por ejemplo, «Córdoba Capital») y elige un nicho para descubrir clientes potenciales y auditar sus páginas web.'
               : 'Prueba a relajar los filtros de valoración, reseñas o situación web para ver todos los resultados obtenidos.'}
           </p>
         </div>
@@ -714,14 +718,22 @@ export const SearchView: React.FC<SearchViewProps> = ({
               queueStatus.activeIds.includes(lead.id) ||
               queueStatus.queuedIds.includes(lead.id);
 
+            const score = lead.opportunityScore.total;
+            const borderTopClass =
+              score >= 70
+                ? 'border-t-4 border-t-emerald-500'
+                : score >= 45
+                ? 'border-t-4 border-t-amber-500'
+                : 'border-t-4 border-t-rose-400';
+
             return (
               <div
                 key={lead.id}
                 onClick={() => onSelectLead(lead)}
-                className={`bg-white border rounded-lg p-4 transition-colors cursor-pointer flex flex-col justify-between ${
+                className={`bg-white border rounded-xl p-4 transition-all duration-150 cursor-pointer flex flex-col justify-between shadow-xs hover:shadow-md ${borderTopClass} ${
                   isSelected
-                    ? 'border-blue-600 ring-1 ring-blue-600'
-                    : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-blue-600 ring-2 ring-blue-500/20'
+                    : 'border-slate-200/90 hover:border-slate-300'
                 }`}
               >
                 <div>
@@ -732,23 +744,32 @@ export const SearchView: React.FC<SearchViewProps> = ({
                         checked={isSelected}
                         onClick={(e) => e.stopPropagation()}
                         onChange={() => toggleSelectOne(lead.id)}
-                        className="mt-1 rounded border-slate-300 text-blue-700"
+                        className="mt-1 rounded border-slate-300 text-blue-700 focus:ring-blue-500 cursor-pointer"
                       />
                       <div>
-                        <h3 className="text-sm font-semibold text-slate-900">
+                        <h3 className="text-sm font-bold text-slate-900 leading-snug">
                           {lead.displayName}
                         </h3>
-                        <div className="text-xs text-slate-500 mt-0.5">
-                          {lead.primaryTypeDisplayName} · {lead.status}
-                          {lead.isSavedLead ? ' · En mis leads' : ''}
+                        <div className="text-xs text-slate-500 mt-0.5 flex flex-wrap items-center gap-1.5">
+                          <span className="font-medium text-slate-700">{lead.primaryTypeDisplayName}</span>
+                          <span>·</span>
+                          <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">
+                            {lead.status}
+                          </span>
+                          {lead.isSavedLead && (
+                            <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+                              ★ En mis leads
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="mt-3 pt-3 border-t border-slate-100 space-y-2 text-xs">
-                    <div className="text-slate-600 truncate">
-                      {lead.formattedAddress}
+                    <div className="text-slate-600 truncate flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="truncate">{lead.formattedAddress}</span>
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -757,9 +778,10 @@ export const SearchView: React.FC<SearchViewProps> = ({
                         <a
                           href={`tel:${phone.replace(/\s+/g, '')}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="font-mono tabular-nums font-medium text-blue-700 hover:underline"
+                          className="font-mono tabular-nums font-semibold text-blue-700 hover:text-blue-900 hover:underline flex items-center gap-1"
                         >
-                          {phone}
+                          <Phone className="w-3 h-3 text-blue-500" />
+                          <span>{phone}</span>
                         </a>
                       ) : (
                         <span className="text-slate-400">Sin teléfono</span>
@@ -774,9 +796,14 @@ export const SearchView: React.FC<SearchViewProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="text-slate-500">Reseñas Maps:</span>
                       <span className="font-mono tabular-nums text-slate-800">
-                        {typeof lead.rating === 'number'
-                          ? `${lead.rating.toFixed(1)} ★ (${lead.userRatingCount})`
-                          : 'Sin reseñas'}
+                        {typeof lead.rating === 'number' ? (
+                          <span className="inline-flex items-center gap-1">
+                            <span className="text-amber-500 font-bold">★ {lead.rating.toFixed(1)}</span>
+                            <span className="text-slate-500">({lead.userRatingCount})</span>
+                          </span>
+                        ) : (
+                          <span className="text-slate-400">Sin reseñas</span>
+                        )}
                       </span>
                     </div>
                   </div>
@@ -794,7 +821,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="px-2 py-1 text-xs text-slate-600 hover:text-slate-900 border border-slate-200 rounded"
+                        className="px-2 py-1 text-xs text-slate-600 hover:text-blue-700 hover:bg-slate-50 border border-slate-200 rounded transition-colors"
                       >
                         Maps
                       </a>
@@ -805,7 +832,7 @@ export const SearchView: React.FC<SearchViewProps> = ({
                         e.stopPropagation();
                         onSelectLead(lead);
                       }}
-                      className="px-2.5 py-1 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-white rounded cursor-pointer"
+                      className="px-3 py-1.5 text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white rounded-md shadow-xs transition-colors cursor-pointer"
                     >
                       {isAnalyzing ? 'Analizando...' : 'Abrir ficha'}
                     </button>

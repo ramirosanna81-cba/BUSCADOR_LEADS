@@ -12,59 +12,66 @@ export function getScoreColorClasses(value: number, isOpportunity = true): {
   bg: string;
   border: string;
   bar: string;
+  dot: string;
   label: string;
 } {
   if (isOpportunity) {
     if (value >= 70) {
       return {
-        text: 'text-emerald-800',
+        text: 'text-emerald-900',
         bg: 'bg-emerald-50',
         border: 'border-emerald-300',
         bar: 'bg-emerald-600',
+        dot: 'bg-emerald-500',
         label: 'Alta',
       };
     }
     if (value >= 45) {
       return {
-        text: 'text-amber-800',
+        text: 'text-amber-900',
         bg: 'bg-amber-50',
         border: 'border-amber-300',
         bar: 'bg-amber-500',
+        dot: 'bg-amber-500',
         label: 'Media',
       };
     }
     return {
-      text: 'text-red-800',
-      bg: 'bg-red-50',
-      border: 'border-red-300',
-      bar: 'bg-red-600',
+      text: 'text-rose-900',
+      bg: 'bg-rose-50',
+      border: 'border-rose-300',
+      bar: 'bg-rose-600',
+      dot: 'bg-rose-500',
       label: 'Baja',
     };
   } else {
     // PageSpeed: 90-100 verde, 50-89 ámbar, 0-49 rojo
     if (value >= 90) {
       return {
-        text: 'text-emerald-800',
+        text: 'text-emerald-900',
         bg: 'bg-emerald-50',
         border: 'border-emerald-300',
         bar: 'bg-emerald-600',
+        dot: 'bg-emerald-500',
         label: 'Óptimo',
       };
     }
     if (value >= 50) {
       return {
-        text: 'text-amber-800',
+        text: 'text-amber-900',
         bg: 'bg-amber-50',
         border: 'border-amber-300',
         bar: 'bg-amber-500',
+        dot: 'bg-amber-500',
         label: 'Mejorable',
       };
     }
     return {
-      text: 'text-red-800',
-      bg: 'bg-red-50',
-      border: 'border-red-300',
-      bar: 'bg-red-600',
+      text: 'text-rose-900',
+      bg: 'bg-rose-50',
+      border: 'border-rose-300',
+      bar: 'bg-rose-600',
+      dot: 'bg-rose-500',
       label: 'Deficiente',
     };
   }
@@ -79,16 +86,19 @@ export const ScoreBadge: React.FC<ScoreBadgeProps> = ({
 
   return (
     <div className="relative inline-flex items-center gap-1.5">
-      <div className="flex items-center gap-1.5">
+      <div
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border ${colors.bg} ${colors.border} shadow-2xs`}
+      >
+        <span className={`w-2 h-2 rounded-full shrink-0 ${colors.dot}`} />
         <span
-          className={`font-mono tabular-nums text-sm font-semibold ${colors.text}`}
+          className={`font-mono tabular-nums text-xs font-bold ${colors.text}`}
         >
           {score.total}/100
         </span>
-        <span className="text-slate-300" aria-hidden="true">
+        <span className="text-slate-400 text-[10px]" aria-hidden="true">
           ·
         </span>
-        <span className={`text-xs font-medium ${colors.text}`}>
+        <span className={`text-[11px] font-semibold ${colors.text}`}>
           {colors.label}
           {score.isProvisional ? ' (prov.)' : ''}
         </span>

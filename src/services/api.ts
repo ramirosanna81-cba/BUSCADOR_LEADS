@@ -34,6 +34,29 @@ function checkQuotaSignal(status: number, bodyText: string) {
   }
 }
 
+/**
+ * Parsea la respuesta HTTP de forma segura sin lanzar "Unexpected token '<'"
+ * cuando un proxy intermedio o servidor devuelve una página HTML de error/timeout.
+ */
+async function safeReadJson(
+  res: Response,
+  serviceLabel: string
+): Promise<any> {
+  const rawText = await res.text();
+  try {
+    return rawText ? JSON.parse(rawText) : {};
+  } catch {
+    if (rawText.trim().startsWith('<')) {
+      throw new Error(
+        `El servidor o la web tardó demasiado en responder al consultar ${serviceLabel} (HTTP ${res.status}). Inténtalo de nuevo.`
+      );
+    }
+    throw new Error(
+      `Respuesta inesperada de ${serviceLabel} (HTTP ${res.status}): ${rawText.slice(0, 140)}`
+    );
+  }
+}
+
 export async function fetchServerConfigStatus(): Promise<{
   hasServerCloudKey: boolean;
   mapsJsApiKey: string;
@@ -41,7 +64,7 @@ export async function fetchServerConfigStatus(): Promise<{
   try {
     const res = await fetch('/api/config/status');
     if (!res.ok) return { hasServerCloudKey: false, mapsJsApiKey: '' };
-    return await res.json();
+    return await safeReadJson(res, 'Configuración');
   } catch {
     return { hasServerCloudKey: false, mapsJsApiKey: '' };
   }
@@ -59,7 +82,7 @@ export async function testGoogleCloudKey(apiKeyToTest?: string): Promise<{
     method: 'POST',
     headers,
   });
-  const data = await res.json();
+  const data = await safeReadJson(res, 'Places API');
   if (!res.ok) {
     checkQuotaSignal(res.status, JSON.stringify(data));
     throw new Error(data.error || `Error HTTP ${res.status}`);
@@ -85,7 +108,6 @@ export async function searchPlacesByZoneAndNiche(params: {
   if (!pageToken && !forceRefresh) {
     const cached = await dbRepository.getSearchCache(zone, niche);
     if (cached && cached.places.length > 0) {
-      // Sincronizar con leads guardados en base de datos para conservar estados y análisis
       const existingLeads = await dbRepository.getAllLeads();
       const existingById: Record<string, BusinessLead> = {};
       for (const l of existingLeads) {
@@ -113,7 +135,7 @@ export async function searchPlacesByZoneAndNiche(params: {
     }),
   });
 
-  const data = await res.json();
+  const data = await safeReadJson(res, 'Places API');
   if (!res.ok) {
     checkQuotaSignal(res.status, JSON.stringify(data));
     throw new Error(data.error || `Error de Places API (${res.status})`);
@@ -133,10 +155,8 @@ export async function searchPlacesByZoneAndNiche(params: {
     mapPlaceRawToBusinessLead(raw, zone.trim(), niche.trim(), existingById[raw.id])
   );
 
-  // Actualizar leads en el almacén general
   await dbRepository.upsertManyLeads(newLeads);
 
-  // Combinar si había páginas previas
   const previousCache = pageToken ? await dbRepository.getSearchCache(zone, niche) : undefined;
   const combinedMap: Record<string, BusinessLead> = {};
   if (previousCache) {
@@ -204,16 +224,20 @@ export async function analyzeSingleBusinessLead(
     ]);
 
     if (psRes.status === 'fulfilled') {
-      const psJson = await psRes.value.json();
-      if (psRes.value.ok) {
-        pageSpeed = psJson.pageSpeed;
-      } else {
-        console.warn('Aviso PageSpeed:', psJson.error);
+      try {
+        const psJson = await safeReadJson(psRes.value, 'PageSpeed Insights');
+        if (psRes.value.ok && psJson.pageSpeed) {
+          pageSpeed = psJson.pageSpeed;
+        } else {
+          console.warn('Aviso PageSpeed:', psJson.error);
+        }
+      } catch (psErr) {
+        console.warn('PageSpeed no disponible para esta URL:', psErr);
       }
     }
 
     if (geminiRes.status === 'fulfilled') {
-      const gemJson = await geminiRes.value.json();
+      const gemJson = await safeReadJson(geminiRes.value, 'Gemini API');
       if (!geminiRes.value.ok) {
         throw new Error(gemJson.error || 'Error al analizar la web con Gemini');
       }
@@ -224,7 +248,6 @@ export async function analyzeSingleBusinessLead(
     }
   } else {
     // 2. Si NO tiene web propia (Sin web o solo Red social / Directorio), NO llamamos a PageSpeed
-    // Generamos análisis directo de carencia de web y los 3 borradores personalizados
     const res = await fetch('/api/gemini/drafts', {
       method: 'POST',
       headers,
@@ -242,7 +265,7 @@ export async function analyzeSingleBusinessLead(
       }),
     });
 
-    const data = await res.json();
+    const data = await safeReadJson(res, 'Gemini API');
     if (!res.ok) {
       throw new Error(data.error || 'Error al generar borradores con Gemini');
     }
@@ -266,7 +289,6 @@ export async function analyzeSingleBusinessLead(
 
   await dbRepository.upsertLead(updatedLead);
 
-  // Actualizar también en la caché de búsqueda si existe
   if (lead.zoneTag && lead.nicheTag) {
     const cached = await dbRepository.getSearchCache(lead.zoneTag, lead.nicheTag);
     if (cached) {
@@ -309,7 +331,7 @@ export async function regenerateOutreachDrafts(
     }),
   });
 
-  const data = await res.json();
+  const data = await safeReadJson(res, 'Gemini API');
   if (!res.ok) {
     throw new Error(data.error || 'No se pudieron regenerar los borradores');
   }
@@ -337,7 +359,7 @@ export async function generateNicheRadarWithGemini(params: {
     body: JSON.stringify(params),
   });
 
-  const data = await res.json();
+  const data = await safeReadJson(res, 'Gemini API');
   if (!res.ok) {
     throw new Error(data.error || 'Error al generar recomendaciones de nichos con Gemini');
   }

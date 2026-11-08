@@ -134,7 +134,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 type="text"
                 value={sellerName}
                 onChange={(e) => setSellerName(e.target.value)}
-                placeholder="Ej. Carlos Mendoza — Impulso Local"
+                placeholder="Ej. Ramiro Sanna"
                 className="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-md text-slate-900 focus:bg-white focus:border-blue-600 focus:outline-none"
                 required
               />
@@ -159,13 +159,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <div className="md:col-span-2">
               <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                ¿Qué servicios vendes?
+                ¿Qué servicios vendés?
               </label>
               <textarea
                 rows={2}
                 value={servicesOffered}
                 onChange={(e) => setServicesOffered(e.target.value)}
-                placeholder="Ej. Páginas web rápidas para negocios locales, agentes de IA por WhatsApp que atienden y agendan citas 24/7 y sistemas de reservas online."
+                placeholder="Ej. Páginas web rápidas adaptadas a celulares, agentes de IA para WhatsApp que responden 24/7 y sistemas automáticos para sacar turnos online."
                 className="w-full p-3 text-sm bg-slate-50 border border-slate-300 rounded-md text-slate-900 focus:bg-white focus:border-blue-600 focus:outline-none"
                 required
               />
@@ -179,7 +179,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 rows={2}
                 value={valueProposition}
                 onChange={(e) => setValueProposition(e.target.value)}
-                placeholder="Ej. Entregamos la web o el agente de WhatsApp funcionando en 10 días, enfocados 100% en que el teléfono suene y entren reservas desde Google Maps."
+                placeholder="Ej. Entregamos la página web o el agente de WhatsApp funcionando en 10 días, enfocados 100% en que el celu suene y entren turnos o consultas de clientes de la zona."
                 className="w-full p-3 text-sm bg-slate-50 border border-slate-300 rounded-md text-slate-900 focus:bg-white focus:border-blue-600 focus:outline-none"
                 required
               />

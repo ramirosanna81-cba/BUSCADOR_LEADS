@@ -144,11 +144,14 @@ export const MyLeadsView: React.FC<MyLeadsViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Barra de filtros y acciones */}
-      <div className="bg-white border border-slate-200 rounded-lg p-5 space-y-4">
+      <div className="bg-white border-t-4 border-t-emerald-600 border-x border-b border-slate-200/90 rounded-xl p-5 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div>
-            <h2 className="text-base font-bold text-slate-900">
-              Mis Leads Guardados ({filteredLeads.length})
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span>Mis Leads Guardados</span>
+              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                {filteredLeads.length}
+              </span>
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
               Gestiona tu embudo comercial por estados, programa próximas acciones y exporta tu cartera a CSV.
@@ -268,22 +271,74 @@ export const MyLeadsView: React.FC<MyLeadsViewProps> = ({
       {/* Vista TABLERO KANBAN por los 7 estados */}
       {filteredLeads.length > 0 && viewMode === 'kanban' && (
         <div className="overflow-x-auto pb-3">
-          <div className="grid grid-cols-7 gap-3 min-w-[1320px]">
+          <div className="grid grid-cols-7 gap-3 min-w-[1360px]">
             {LEAD_STATUSES.map((status) => {
               const columnLeads = filteredLeads.filter(
                 (l) => l.status === status
               );
 
+              const colTheme = {
+                'Nuevo': {
+                  bg: 'bg-sky-50/70',
+                  border: 'border-sky-200',
+                  badge: 'bg-sky-600 text-white',
+                  title: 'text-sky-950',
+                  topStripe: 'border-t-4 border-t-sky-500',
+                },
+                'Analizado': {
+                  bg: 'bg-indigo-50/70',
+                  border: 'border-indigo-200',
+                  badge: 'bg-indigo-600 text-white',
+                  title: 'text-indigo-950',
+                  topStripe: 'border-t-4 border-t-indigo-500',
+                },
+                'Contactado': {
+                  bg: 'bg-amber-50/70',
+                  border: 'border-amber-200',
+                  badge: 'bg-amber-600 text-white',
+                  title: 'text-amber-950',
+                  topStripe: 'border-t-4 border-t-amber-500',
+                },
+                'Respondió': {
+                  bg: 'bg-purple-50/70',
+                  border: 'border-purple-200',
+                  badge: 'bg-purple-600 text-white',
+                  title: 'text-purple-950',
+                  topStripe: 'border-t-4 border-t-purple-500',
+                },
+                'Reunión': {
+                  bg: 'bg-teal-50/70',
+                  border: 'border-teal-200',
+                  badge: 'bg-teal-600 text-white',
+                  title: 'text-teal-950',
+                  topStripe: 'border-t-4 border-t-teal-500',
+                },
+                'Cliente': {
+                  bg: 'bg-emerald-50/80',
+                  border: 'border-emerald-300',
+                  badge: 'bg-emerald-600 text-white',
+                  title: 'text-emerald-950',
+                  topStripe: 'border-t-4 border-t-emerald-600',
+                },
+                'Descartado': {
+                  bg: 'bg-slate-100/70',
+                  border: 'border-slate-300',
+                  badge: 'bg-slate-500 text-white',
+                  title: 'text-slate-700',
+                  topStripe: 'border-t-4 border-t-slate-400',
+                },
+              }[status];
+
               return (
                 <div
                   key={status}
-                  className="bg-slate-100 border border-slate-200 rounded-lg p-3 flex flex-col min-h-[480px]"
+                  className={`${colTheme.bg} ${colTheme.border} ${colTheme.topStripe} border rounded-xl p-3 flex flex-col min-h-[480px] shadow-xs`}
                 >
-                  <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-200">
-                    <span className="text-xs font-bold text-slate-800">
+                  <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-200/80">
+                    <span className={`text-xs font-bold ${colTheme.title}`}>
                       {status}
                     </span>
-                    <span className="font-mono tabular-nums text-xs font-semibold text-slate-500">
+                    <span className={`font-mono tabular-nums text-xs font-bold px-2 py-0.5 rounded-full ${colTheme.badge}`}>
                       {columnLeads.length}
                     </span>
                   </div>
@@ -298,29 +353,30 @@ export const MyLeadsView: React.FC<MyLeadsViewProps> = ({
                         <div
                           key={lead.id}
                           onClick={() => onSelectLead(lead)}
-                          className="bg-white border border-slate-200 hover:border-slate-300 rounded-md p-3 cursor-pointer transition-colors space-y-2"
+                          className="bg-white border border-slate-200/90 hover:border-blue-400 rounded-lg p-3 cursor-pointer transition-all duration-150 shadow-xs hover:shadow-sm space-y-2"
                         >
-                          <div className="font-semibold text-xs text-slate-900 leading-snug">
+                          <div className="font-bold text-xs text-slate-900 leading-snug">
                             {lead.displayName}
                           </div>
 
-                          <div className="text-[11px] text-slate-500">
-                            {lead.nicheTag || lead.primaryTypeDisplayName} ·{' '}
-                            {lead.zoneTag}
+                          <div className="text-[11px] text-slate-500 flex items-center gap-1 truncate">
+                            <span className="truncate">{lead.nicheTag || lead.primaryTypeDisplayName}</span>
+                            <span>·</span>
+                            <span className="shrink-0">{lead.zoneTag}</span>
                           </div>
 
                           <div className="text-[11px]">
                             {lead.webClassification === 'no_website' ? (
-                              <span className="font-semibold text-red-700">
+                              <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
                                 Sin web
                               </span>
                             ) : lead.webClassification ===
                               'social_or_directory' ? (
-                              <span className="font-semibold text-amber-800">
-                                Sin web propia ({lead.detectedPlatform})
+                              <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
+                                Sin web propia ({lead.detectedPlatform || 'Externo'})
                               </span>
                             ) : (
-                              <span className="text-slate-600">
+                              <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                                 Con web propia
                               </span>
                             )}
@@ -334,9 +390,9 @@ export const MyLeadsView: React.FC<MyLeadsViewProps> = ({
                           </div>
 
                           {lead.nextActionDate && (
-                            <div className="flex items-center gap-1 text-[11px] text-blue-800 font-mono">
-                              <Calendar className="w-3 h-3" />
-                              <span>Próx.: {lead.nextActionDate}</span>
+                            <div className="flex items-center gap-1 text-[11px] text-blue-800 font-mono bg-blue-50/80 px-2 py-1 rounded border border-blue-200/60">
+                              <Calendar className="w-3 h-3 text-blue-600" />
+                              <span className="font-semibold">Próx.: {lead.nextActionDate}</span>
                             </div>
                           )}
 
@@ -353,9 +409,10 @@ export const MyLeadsView: React.FC<MyLeadsViewProps> = ({
                             {phone ? (
                               <a
                                 href={`tel:${phone.replace(/\s+/g, '')}`}
-                                className="text-[11px] font-mono text-blue-700 hover:underline"
+                                className="text-[11px] font-mono text-blue-700 hover:underline flex items-center gap-0.5"
                               >
-                                {phone}
+                                <Phone className="w-2.5 h-2.5" />
+                                <span>{phone}</span>
                               </a>
                             ) : (
                               <span className="text-[11px] text-slate-400">
@@ -371,7 +428,7 @@ export const MyLeadsView: React.FC<MyLeadsViewProps> = ({
                                   status: e.target.value as LeadStatus,
                                 })
                               }
-                              className="text-[11px] bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5 text-slate-700"
+                              className="text-[11px] bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5 text-slate-700 font-medium"
                             >
                               {LEAD_STATUSES.map((st) => (
                                 <option key={st} value={st}>

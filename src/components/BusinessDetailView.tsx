@@ -189,48 +189,55 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
         </div>
       </div>
 
-      {/* Cabecera de Datos del Negocio */}
-      <div className="bg-white border border-slate-200 rounded-lg p-6">
+      {/* Cabecera de Datos del Negocio con estilo ejecutivo y colores */}
+      <div className="bg-gradient-to-br from-[#0b1329] via-[#142345] to-[#0d1933] border border-slate-700/80 rounded-xl p-6 text-white shadow-md">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
           <div className="space-y-2">
-            <div className="text-xs text-slate-500">
-              <span>{lead.primaryTypeDisplayName}</span>
-              <span className="mx-1.5">·</span>
-              <span>Zona: {lead.zoneTag || 'España'}</span>
-              <span className="mx-1.5">·</span>
+            <div className="text-xs text-slate-300 flex flex-wrap items-center gap-2">
+              <span className="font-semibold text-blue-300">{lead.primaryTypeDisplayName}</span>
+              <span className="text-slate-500">·</span>
+              <span>Zona: <strong className="text-slate-100">{lead.zoneTag || 'Córdoba Capital'}</strong></span>
+              <span className="text-slate-500">·</span>
               <span>
-                Estado comercial: <strong className="text-slate-800">{lead.status}</strong>
+                Estado: <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-200 border border-blue-400/30">{lead.status}</span>
               </span>
             </div>
 
-            <h1 className="text-2xl font-bold text-slate-900">
+            <h1 className="text-2xl font-bold text-white tracking-tight">
               {lead.displayName}
             </h1>
 
-            <p className="text-sm text-slate-600">{lead.formattedAddress}</p>
+            <p className="text-sm text-slate-300">{lead.formattedAddress}</p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-4 text-xs text-slate-700">
-              <div>
-                <span className="text-slate-500">Valoración Maps: </span>
-                <span className="font-mono tabular-nums font-semibold">
-                  {typeof lead.rating === 'number'
-                    ? `${lead.rating.toFixed(1)} ★ (${lead.userRatingCount} reseñas)`
-                    : 'Sin valoraciones'}
+            <div className="pt-2 flex flex-wrap items-center gap-4 text-xs">
+              <div className="flex items-center gap-1.5">
+                <span className="text-slate-400">Valoración Maps:</span>
+                <span className="font-mono tabular-nums font-semibold text-white">
+                  {typeof lead.rating === 'number' ? (
+                    <span className="inline-flex items-center gap-1">
+                      <span className="text-amber-400 font-bold">★ {lead.rating.toFixed(1)}</span>
+                      <span className="text-slate-300">({lead.userRatingCount} reseñas)</span>
+                    </span>
+                  ) : (
+                    'Sin valoraciones'
+                  )}
                 </span>
               </div>
 
-              <span>·</span>
+              <span className="text-slate-600">·</span>
 
-              <div>
-                <span className="text-slate-500">Situación web: </span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-slate-400">Situación web:</span>
                 {lead.webClassification === 'no_website' ? (
-                  <span className="font-semibold text-red-700">Sin web</span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded font-bold text-[11px] bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                    Sin web
+                  </span>
                 ) : lead.webClassification === 'social_or_directory' ? (
-                  <span className="font-semibold text-amber-800">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded font-bold text-[11px] bg-amber-500/20 text-amber-300 border border-amber-500/40">
                     Sin web propia ({lead.detectedPlatform || 'Red social / Directorio'})
                   </span>
                 ) : (
-                  <span className="font-semibold text-slate-900">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded font-bold text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                     Con web propia
                   </span>
                 )}
@@ -242,7 +249,7 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
               {phone && (
                 <a
                   href={`tel:${phone.replace(/\s+/g, '')}`}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white text-xs font-medium rounded-md transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm transition-all"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span className="font-mono tabular-nums">Llamar ({phone})</span>
@@ -254,15 +261,15 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                   href={lead.websiteUri}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-medium rounded-md transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg shadow-sm transition-all"
                 >
-                  <Globe className="w-3.5 h-3.5 text-slate-500" />
+                  <Globe className="w-3.5 h-3.5" />
                   <span>
                     {lead.webClassification === 'social_or_directory'
                       ? `Abrir ${lead.detectedPlatform || 'enlace'}`
                       : 'Abrir página web'}
                   </span>
-                  <ExternalLink className="w-3 h-3 text-slate-400" />
+                  <ExternalLink className="w-3 h-3 opacity-70" />
                 </a>
               )}
 
@@ -271,23 +278,23 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                   href={lead.googleMapsUri}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-medium rounded-md transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-600 text-xs font-semibold rounded-lg transition-colors"
                 >
-                  <span>Abrir en Google Maps</span>
-                  <ExternalLink className="w-3 h-3 text-slate-400" />
+                  <span>Ver en Google Maps</span>
+                  <ExternalLink className="w-3 h-3 opacity-60" />
                 </a>
               )}
             </div>
           </div>
 
           {/* Resumen de Puntuación de Oportunidad y Desglose */}
-          <div className="lg:w-96 bg-slate-50 border border-slate-200 rounded-md p-4 shrink-0">
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-200">
+          <div className="lg:w-96 bg-slate-900/90 border border-slate-700/80 rounded-xl p-4 shrink-0 shadow-inner">
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-800">
               <div>
-                <div className="text-xs font-semibold text-slate-900">
+                <div className="text-xs font-bold text-white">
                   Puntuación de Oportunidad
                 </div>
-                <div className="text-[11px] text-slate-500">
+                <div className="text-[11px] text-slate-400">
                   {lead.opportunityScore.isProvisional
                     ? 'Nota provisional (datos de Places)'
                     : 'Nota auditada (Places + Web)'}
@@ -309,12 +316,12 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                   key={i}
                   className="flex items-start justify-between gap-2 text-xs"
                 >
-                  <span className="text-slate-700" title={item.reason}>
+                  <span className="text-slate-300" title={item.reason}>
                     {item.label}
                   </span>
                   <span
-                    className={`font-mono tabular-nums font-semibold shrink-0 ${
-                      item.points >= 0 ? 'text-emerald-700' : 'text-red-700'
+                    className={`font-mono tabular-nums font-bold shrink-0 ${
+                      item.points >= 0 ? 'text-emerald-400' : 'text-rose-400'
                     }`}
                   >
                     {item.points >= 0 ? `+${item.points}` : item.points}
@@ -548,7 +555,7 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                       detail: lead.geminiAnalysis.checklist.httpsDetail,
                     },
                     {
-                      label: 'Adaptada a teléfonos móviles',
+                      label: 'Adaptada a celulares y pantallas móviles',
                       ok: lead.geminiAnalysis.checklist.mobileFriendly,
                       detail:
                         lead.geminiAnalysis.checklist.mobileFriendlyDetail,
@@ -559,7 +566,7 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                       detail: lead.geminiAnalysis.checklist.whatsappDetail,
                     },
                     {
-                      label: 'Sistema de cita o reserva online',
+                      label: 'Sistema de turnos o reserva online',
                       ok: lead.geminiAnalysis.checklist.onlineBooking,
                       detail: lead.geminiAnalysis.checklist.onlineBookingDetail,
                     },
@@ -669,15 +676,15 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
             </div>
           </div>
 
-          {/* Pestañas en pantalla (en impresión se muestran los tres) */}
-          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-md w-fit no-print">
+          {/* Pestañas en pantalla con colores vivos por canal */}
+          <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg w-fit no-print">
             <button
               type="button"
               onClick={() => setActiveDraftTab('whatsapp')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${
                 activeDraftTab === 'whatsapp'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-slate-700 hover:text-emerald-700 hover:bg-emerald-50/60'
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
@@ -687,10 +694,10 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveDraftTab('call')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${
                 activeDraftTab === 'call'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-700 hover:text-blue-700 hover:bg-blue-50/60'
               }`}
             >
               <PhoneCall className="w-3.5 h-3.5" />
@@ -700,10 +707,10 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveDraftTab('email')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${
                 activeDraftTab === 'email'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-purple-600 text-white shadow-xs'
+                  : 'text-slate-700 hover:text-purple-700 hover:bg-purple-50/60'
               }`}
             >
               <Mail className="w-3.5 h-3.5" />
@@ -717,11 +724,12 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
             <div
               className={`${
                 activeDraftTab === 'whatsapp' ? 'block' : 'hidden print:block'
-              } bg-slate-50 border border-slate-200 rounded-md p-4`}
+              } bg-emerald-50/70 border border-emerald-300 rounded-xl p-5 shadow-xs`}
             >
-              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-                <span className="text-xs font-semibold text-slate-800">
-                  1. Mensaje de WhatsApp (Tono: {lead.outreachDrafts.tone})
+              <div className="flex items-center justify-between pb-2.5 border-b border-emerald-200">
+                <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                  <MessageSquare className="w-4 h-4 text-emerald-700" />
+                  <span>1. Mensaje de WhatsApp (Tono: {lead.outreachDrafts.tone})</span>
                 </span>
                 <button
                   type="button"
@@ -731,12 +739,12 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                       'whatsapp'
                     )
                   }
-                  className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-medium text-slate-700 hover:bg-slate-100 cursor-pointer no-print"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-emerald-300 hover:bg-emerald-100/60 rounded-md text-xs font-bold text-emerald-800 transition-colors cursor-pointer no-print"
                 >
                   {copiedField === 'whatsapp' ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-emerald-700">Copiado</span>
+                      <span className="text-emerald-800 font-bold">¡Copiado!</span>
                     </>
                   ) : (
                     <>
@@ -746,7 +754,7 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                   )}
                 </button>
               </div>
-              <pre className="mt-3 text-xs text-slate-900 whitespace-pre-wrap font-sans leading-relaxed">
+              <pre className="mt-3.5 text-xs text-slate-900 whitespace-pre-wrap font-sans leading-relaxed bg-white/90 p-4 rounded-lg border border-emerald-200/80 shadow-2xs">
                 {lead.outreachDrafts.whatsappMessage}
               </pre>
             </div>
@@ -755,23 +763,24 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
             <div
               className={`${
                 activeDraftTab === 'call' ? 'block' : 'hidden print:block'
-              } bg-slate-50 border border-slate-200 rounded-md p-4`}
+              } bg-blue-50/70 border border-blue-300 rounded-xl p-5 shadow-xs`}
             >
-              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-                <span className="text-xs font-semibold text-slate-800">
-                  2. Guion de llamada de 30 segundos
+              <div className="flex items-center justify-between pb-2.5 border-b border-blue-200">
+                <span className="text-xs font-bold text-blue-950 flex items-center gap-1.5">
+                  <PhoneCall className="w-4 h-4 text-blue-700" />
+                  <span>2. Guion de llamada de 30 segundos</span>
                 </span>
                 <button
                   type="button"
                   onClick={() =>
                     handleCopy(lead.outreachDrafts!.callScript30s, 'call')
                   }
-                  className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-medium text-slate-700 hover:bg-slate-100 cursor-pointer no-print"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-blue-300 hover:bg-blue-100/60 rounded-md text-xs font-bold text-blue-800 transition-colors cursor-pointer no-print"
                 >
                   {copiedField === 'call' ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-emerald-700">Copiado</span>
+                      <span className="text-blue-800 font-bold">¡Copiado!</span>
                     </>
                   ) : (
                     <>
@@ -781,7 +790,7 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                   )}
                 </button>
               </div>
-              <pre className="mt-3 text-xs text-slate-900 whitespace-pre-wrap font-sans leading-relaxed">
+              <pre className="mt-3.5 text-xs text-slate-900 whitespace-pre-wrap font-sans leading-relaxed bg-white/90 p-4 rounded-lg border border-blue-200/80 shadow-2xs">
                 {lead.outreachDrafts.callScript30s}
               </pre>
             </div>
@@ -790,11 +799,12 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
             <div
               className={`${
                 activeDraftTab === 'email' ? 'block' : 'hidden print:block'
-              } bg-slate-50 border border-slate-200 rounded-md p-4 space-y-3`}
+              } bg-purple-50/70 border border-purple-300 rounded-xl p-5 space-y-3 shadow-xs`}
             >
-              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-                <span className="text-xs font-semibold text-slate-800">
-                  3. Correo electrónico personalizado
+              <div className="flex items-center justify-between pb-2.5 border-b border-purple-200">
+                <span className="text-xs font-bold text-purple-950 flex items-center gap-1.5">
+                  <Mail className="w-4 h-4 text-purple-700" />
+                  <span>3. Correo electrónico personalizado</span>
                 </span>
                 <button
                   type="button"
@@ -806,12 +816,12 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                       'email'
                     )
                   }
-                  className="inline-flex items-center gap-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs font-medium text-slate-700 hover:bg-slate-100 cursor-pointer no-print"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-purple-300 hover:bg-purple-100/60 rounded-md text-xs font-bold text-purple-800 transition-colors cursor-pointer no-print"
                 >
                   {copiedField === 'email' ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-600" />
-                      <span className="text-emerald-700">Copiado</span>
+                      <span className="text-purple-800 font-bold">¡Copiado!</span>
                     </>
                   ) : (
                     <>
@@ -821,13 +831,13 @@ export const BusinessDetailView: React.FC<BusinessDetailViewProps> = ({
                   )}
                 </button>
               </div>
-              <div className="text-xs">
-                <span className="font-semibold text-slate-600">Asunto: </span>
-                <span className="font-medium text-slate-900">
+              <div className="text-xs bg-white/90 p-3 rounded-lg border border-purple-200/80">
+                <span className="font-bold text-purple-900">Asunto: </span>
+                <span className="font-semibold text-slate-900">
                   {lead.outreachDrafts.emailSubject}
                 </span>
               </div>
-              <pre className="text-xs text-slate-900 whitespace-pre-wrap font-sans leading-relaxed pt-2 border-t border-slate-200">
+              <pre className="text-xs text-slate-900 whitespace-pre-wrap font-sans leading-relaxed bg-white/90 p-4 rounded-lg border border-purple-200/80 shadow-2xs">
                 {lead.outreachDrafts.emailBody}
               </pre>
             </div>
